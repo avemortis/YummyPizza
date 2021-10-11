@@ -32,12 +32,8 @@ class MenuFragment : Fragment(), View.OnClickListener {
     ): View? {
         _binding = MenuFragmentBinding.inflate(inflater, container, false)
 
-        val toCartButton = binding.menuToCartButton
-        toCartButton.setOnClickListener(this)
-
-        val toItemLooker = binding.menuItemLooker
-        toItemLooker.setOnClickListener(this)
-
+        binding.menuToCartButton.setOnClickListener(this)
+        binding.menuItemLooker.setOnClickListener(this)
 
         return binding.root
     }
@@ -49,14 +45,9 @@ class MenuFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id){
-            R.id.menu_to_cart_button -> openCartFragment()
+            R.id.menu_to_cart_button -> FragmentNavigator.replaceFragmentByNew(CartFragment.newInstance())
             R.id.menu_item_looker -> showMenuItemLooker()
         }
-    }
-
-    private fun openCartFragment(){
-        val cartFragment = CartFragment.newInstance()
-        FragmentNavigator.replaceFragmentByNew(cartFragment)
     }
 
     private fun showMenuItemLooker(){
