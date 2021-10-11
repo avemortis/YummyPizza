@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">YummyPizza</string>
+
+    <string name="menu_welcome_text">This is menu fragment</string>
+    <string name="to_cart">To cart</string>
+    <string name="menu_item_look">Menu item looker</string>
+
+    <string name="menu_item_welcome_text">This is menu item looker</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="back_to_menu">Back to menu</string>
+
+    <string name="cart_welcome_text">This is cart fragment</string>
+    <string name="cart_to_menu">To menu</string>
+    <string name="cart_confirm">Confirm the order</string>
+    
+    <string name="order_was_sent">Order was successfully sent!</string>
+</resources>
