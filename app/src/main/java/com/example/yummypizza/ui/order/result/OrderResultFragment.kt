@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import com.example.yummypizza.R
 import com.example.yummypizza.databinding.OrderResultFragmentBinding
 import com.example.yummypizza.ui.menu.MenuFragment
-import com.example.yummypizza.utils.FragmentNavigator
+import com.example.yummypizza.utils.FragmentNavigator.show
 
 class OrderResultFragment : Fragment() {
 
@@ -28,9 +28,19 @@ class OrderResultFragment : Fragment() {
     ): View? {
         _binding = OrderResultFragmentBinding.inflate(inflater, container, false)
 
-        binding.orderResultBackToMenuButton.setOnClickListener { FragmentNavigator.replaceFragmentByNew(MenuFragment.newInstance()) }
+        setOnClickListeners()
 
         return binding.root
+    }
+
+    private fun setOnClickListeners(){
+        binding.orderResultBackToMenuButton.setOnClickListener {
+            val fragment = MenuFragment.newInstance()
+            fragment.show(
+                parentFragmentManager,
+                R.id.root_fragment
+            )
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

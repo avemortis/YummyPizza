@@ -2,7 +2,6 @@ package com.example.yummypizza.ui.menu
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +12,9 @@ import com.example.yummypizza.databinding.MenuFragmentBinding
 import com.example.yummypizza.ui.menu.item.MenuItemBottomSheet
 
 import com.example.yummypizza.utils.FragmentNavigator
+import com.example.yummypizza.utils.FragmentNavigator.show
 
-class MenuFragment : Fragment(), View.OnClickListener {
+class MenuFragment : Fragment() {
 
     private var _binding: MenuFragmentBinding? = null
     private val binding get() = _binding!!
@@ -32,8 +32,7 @@ class MenuFragment : Fragment(), View.OnClickListener {
     ): View? {
         _binding = MenuFragmentBinding.inflate(inflater, container, false)
 
-        binding.menuToCartButton.setOnClickListener(this)
-        binding.menuItemLooker.setOnClickListener(this)
+        setOnClickListeners()
 
         return binding.root
     }
@@ -43,11 +42,20 @@ class MenuFragment : Fragment(), View.OnClickListener {
         viewModel = ViewModelProvider(this).get(MenuViewModel::class.java)
     }
 
-    override fun onClick(v: View?) {
-        when (v?.id){
-            R.id.menu_to_cart_button -> FragmentNavigator.replaceFragmentByNew(CartFragment.newInstance())
-            R.id.menu_item_looker -> showMenuItemLooker()
+    private fun setOnClickListeners(){
+        binding.menuToCartButton
+            .setOnClickListener {
+                val fragment = CartFragment.newInstance()
+                fragment.show(
+                    parentFragmentManager,
+                    R.id.root_fragment
+                )
+            }
+
+        binding.menuItemLooker.setOnClickListener {
+            showMenuItemLooker()
         }
+
     }
 
     private fun showMenuItemLooker(){

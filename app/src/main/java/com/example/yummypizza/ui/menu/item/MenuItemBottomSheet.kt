@@ -9,7 +9,7 @@ import com.example.yummypizza.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.yummypizza.databinding.MenuItemBottomSheetBinding
 
-class MenuItemBottomSheet : BottomSheetDialogFragment(), View.OnClickListener {
+class MenuItemBottomSheet : BottomSheetDialogFragment() {
     private var _binding: MenuItemBottomSheetBinding? = null
     private val binding get() = _binding!!
 
@@ -20,16 +20,20 @@ class MenuItemBottomSheet : BottomSheetDialogFragment(), View.OnClickListener {
     ): View? {
         _binding = MenuItemBottomSheetBinding.inflate(inflater, container, false)
 
-        binding.menuItemBackToMenuItem.setOnClickListener(this)
-        binding.menuItemAddToCartButton.setOnClickListener(this)
+        setOnClickListeners()
 
         return binding.root
     }
 
-    override fun onClick(v: View?) {
-        when(v?.id) {
-            R.id.menu_item_back_to_menu_item -> this.dismiss()
-            R.id.menu_item_add_to_cart_button -> Toast.makeText(requireContext(), R.string.add_to_cart, Toast.LENGTH_SHORT).show()
+    private fun setOnClickListeners(){
+        binding.menuItemBackToMenuItem.setOnClickListener {
+            this.dismiss()
         }
+
+        binding.menuItemAddToCartButton.setOnClickListener {
+            Toast.makeText(requireContext(), R.string.add_to_cart, Toast.LENGTH_SHORT).show()
+        }
+
     }
+
 }

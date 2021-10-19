@@ -11,12 +11,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        FragmentNavigator.apply {
-            fragmentManager = supportFragmentManager
-            if (savedInstanceState == null){
-                containerId = R.id.root_fragment
-                setStartFragment(MenuFragment.newInstance())
-            }
+        if (savedInstanceState == null){
+            FragmentNavigator.setStartFragment(
+                supportFragmentManager,
+                R.id.root_fragment,
+                MenuFragment.newInstance()
+            )
         }
 
         setContentView(R.layout.activity_main)

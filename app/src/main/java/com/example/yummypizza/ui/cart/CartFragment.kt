@@ -11,8 +11,9 @@ import com.example.yummypizza.databinding.CartFragmentBinding
 import com.example.yummypizza.ui.menu.MenuFragment
 import com.example.yummypizza.ui.order.result.OrderResultFragment
 import com.example.yummypizza.utils.FragmentNavigator
+import com.example.yummypizza.utils.FragmentNavigator.show
 
-class CartFragment : Fragment(), View.OnClickListener {
+class CartFragment : Fragment() {
 
     private var _binding: CartFragmentBinding? = null
     private val binding get() = _binding!!
@@ -29,8 +30,7 @@ class CartFragment : Fragment(), View.OnClickListener {
     ): View? {
         _binding = CartFragmentBinding.inflate(inflater, container, false)
 
-        binding.cartBackToMenuButton.setOnClickListener(this)
-        binding.cartConfirmOrderButton.setOnClickListener(this)
+        setOnClickListeners()
 
         return binding.root
     }
@@ -40,10 +40,23 @@ class CartFragment : Fragment(), View.OnClickListener {
         viewModel = ViewModelProvider(this).get(CartViewModel::class.java)
     }
 
-    override fun onClick(v: View?) {
-        when (v?.id){
-            R.id.cart_back_to_menu_button -> FragmentNavigator.replaceFragmentByNew(MenuFragment.newInstance())
-            R.id.cart_confirm_order_button -> FragmentNavigator.replaceFragmentByNew(OrderResultFragment.newInstance())
+    private fun setOnClickListeners(){
+        binding.cartConfirmOrderButton
+            .setOnClickListener {
+                val fragment = OrderResultFragment.newInstance()
+                fragment.show(
+                    parentFragmentManager,
+                    R.id.root_fragment
+                )
+            }
+        binding.cartBackToMenuButton.
+        setOnClickListener {
+            val fragment = MenuFragment.newInstance()
+            fragment.show(
+                parentFragmentManager,
+                R.id.root_fragment
+            )
         }
+
     }
 }
