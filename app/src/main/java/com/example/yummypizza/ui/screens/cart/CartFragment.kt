@@ -1,4 +1,4 @@
-package com.example.yummypizza.ui.cart
+package com.example.yummypizza.ui.screens.cart
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -8,10 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.yummypizza.R
 import com.example.yummypizza.databinding.CartFragmentBinding
-import com.example.yummypizza.ui.menu.MenuFragment
-import com.example.yummypizza.ui.order.result.OrderResultFragment
-import com.example.yummypizza.utils.FragmentNavigator
-import com.example.yummypizza.utils.FragmentNavigator.show
+import com.example.yummypizza.ui.screens.menu.MenuFragment
+import com.example.yummypizza.ui.screens.order.result.OrderResultFragment
+import com.example.yummypizza.utils.navigation.FragmentNavigator.show
 
 class CartFragment : Fragment() {
 

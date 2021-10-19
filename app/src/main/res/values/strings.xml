@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">YummyPizza</string>
 
+    <string name="menu">Menu</string>
     <string name="menu_welcome_text">This is menu fragment</string>
     <string name="to_cart">To cart</string>
     <string name="menu_item_look">Menu item looker</string>

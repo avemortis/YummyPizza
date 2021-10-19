@@ -1,4 +1,4 @@
-package com.example.yummypizza.ui.cart
+package com.example.yummypizza.ui.screens.cart
 
 import androidx.lifecycle.ViewModel
 

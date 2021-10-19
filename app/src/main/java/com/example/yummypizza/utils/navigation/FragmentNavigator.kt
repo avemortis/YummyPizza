@@ -1,9 +1,7 @@
-package com.example.yummypizza.utils
+package com.example.yummypizza.utils.navigation
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.example.yummypizza.ui.menu.MenuFragment
-import com.example.yummypizza.ui.order.result.OrderResultFragment
 
 object FragmentNavigator {
     fun setStartFragment(fragmentManager: FragmentManager, containerId: Int, fragment: Fragment){

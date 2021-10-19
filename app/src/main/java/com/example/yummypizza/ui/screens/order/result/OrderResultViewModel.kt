@@ -1,4 +1,4 @@
-package com.example.yummypizza.ui.order.result
+package com.example.yummypizza.ui.screens.order.result
 
 import androidx.lifecycle.ViewModel
 

@@ -1,4 +1,4 @@
-package com.example.yummypizza.ui.order.result
+package com.example.yummypizza.ui.screens.order.result
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.yummypizza.R
 import com.example.yummypizza.databinding.OrderResultFragmentBinding
-import com.example.yummypizza.ui.menu.MenuFragment
-import com.example.yummypizza.utils.FragmentNavigator.show
+import com.example.yummypizza.ui.screens.menu.MenuFragment
+import com.example.yummypizza.utils.navigation.FragmentNavigator.show
 
 class OrderResultFragment : Fragment() {
 
