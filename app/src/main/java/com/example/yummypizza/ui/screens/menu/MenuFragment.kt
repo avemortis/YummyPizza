@@ -79,7 +79,8 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener {
     }
 
     override fun onClick(position: Int) {
-        val itemLookerBottomSheet = MenuItemBottomSheet.newInstance(position)
+        val actualMenu = viewModel.menuLiveData.value!!
+        val itemLookerBottomSheet = MenuItemBottomSheet.newInstance(actualMenu[position].id - 1)
         itemLookerBottomSheet.show(childFragmentManager, TAG)
     }
 
