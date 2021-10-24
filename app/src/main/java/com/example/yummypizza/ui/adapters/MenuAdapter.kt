@@ -3,7 +3,7 @@ package com.example.yummypizza.ui.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.battisq.pizzamarket.PizzaEntity
+import com.example.yummypizza.data.entities.PizzaEntity
 import com.example.yummypizza.databinding.MenuItemBinding
 import com.squareup.picasso.Picasso
 

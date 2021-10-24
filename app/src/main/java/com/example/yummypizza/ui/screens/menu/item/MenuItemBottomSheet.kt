@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.battisq.pizzamarket.PizzaDatabase
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.yummypizza.databinding.MenuItemBottomSheetBinding
 import com.squareup.picasso.Picasso

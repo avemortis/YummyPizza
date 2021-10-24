@@ -1,7 +1,8 @@
 package com.example.yummypizza.utils.diffutils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.battisq.pizzamarket.PizzaEntity
+import com.example.yummypizza.data.entities.PizzaEntity
+
 
 class MenuDiffUtil(val oldList : List<PizzaEntity>, val newList : List <PizzaEntity>) : DiffUtil.Callback() {
     override fun getOldListSize() = oldList.size

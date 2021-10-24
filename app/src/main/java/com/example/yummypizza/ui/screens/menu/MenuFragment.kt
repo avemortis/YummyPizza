@@ -10,42 +10,50 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.yummypizza.data.api.PizzaService
 import com.example.yummypizza.databinding.MenuFragmentBinding
 import com.example.yummypizza.ui.adapters.MenuAdapter
 import com.example.yummypizza.ui.adapters.OnMenuItemCLickListener
 import com.example.yummypizza.ui.screens.menu.item.MenuItemBottomSheet
 import com.example.yummypizza.utils.diffutils.MenuDiffUtil
+import io.reactivex.disposables.CompositeDisposable
 
 class MenuFragment : Fragment(), OnMenuItemCLickListener {
 
     private var _binding: MenuFragmentBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var viewModel: MenuViewModel
+    private val compositeDisposable = CompositeDisposable()
+
     companion object {
         fun newInstance() = MenuFragment()
         const val TAG = "MenuFragment"
     }
-
-    private lateinit var viewModel: MenuViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = MenuFragmentBinding.inflate(inflater, container, false)
-
-        setOnClickListeners()
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(MenuViewModel::class.java)
+
+        if (savedInstanceState == null) {
+            viewModel.getMenu(PizzaService())
+        }
+
         startLiveDataWatch()
         setSearchView()
+    }
 
-
+    override fun onDestroy() {
+        viewModel.compositeDisposable.clear()
+        super.onDestroy()
     }
 
     private fun setOnClickListeners(){

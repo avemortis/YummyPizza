@@ -5,8 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.battisq.pizzamarket.PizzaDatabase
-import com.battisq.pizzamarket.PizzaEntity
+import com.example.yummypizza.data.entities.PizzaEntity
 
 class MenuItemBottomSheetViewModel : ViewModel() {
     lateinit var bundle: Bundle
@@ -16,7 +15,7 @@ class MenuItemBottomSheetViewModel : ViewModel() {
     fun getPizzaLiveData() : LiveData<PizzaEntity>{
         try {
             pizzaLiveData.apply {
-                value = PizzaDatabase.pizzaDao.getById(index)
+                //value = PizzaDatabase.pizzaDao.getById(index)
             }
         } catch (e : Exception){
             throw (IllegalStateException("No bundle or bundle das not contain index"))

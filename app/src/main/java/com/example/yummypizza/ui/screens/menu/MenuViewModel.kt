@@ -2,35 +2,47 @@ package com.example.yummypizza.ui.screens.menu
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.battisq.pizzamarket.PizzaDatabase
-import com.battisq.pizzamarket.PizzaEntity
-import com.example.yummypizza.utils.diffutils.MenuDiffUtil
+import com.example.yummypizza.data.api.PizzaService
+import com.example.yummypizza.data.entities.PizzaEntity
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 class MenuViewModel : ViewModel() {
-    val menu : MutableList<PizzaEntity> = mutableListOf()
-    val menuLiveData: MutableLiveData<List<PizzaEntity>> = MutableLiveData(mutableListOf())
+    private lateinit var menuFull : List<PizzaEntity>
+    val compositeDisposable = CompositeDisposable()
+    val menuLiveData : MutableLiveData<List<PizzaEntity>> = MutableLiveData()
 
-    init {
-        getMenu()
-    }
+    fun getMenu(service: PizzaService){
+        service.getAllPizzas()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : SingleObserver<List<PizzaEntity>> {
+                override fun onSuccess(t: List<PizzaEntity>) {
+                    menuFull = t
+                    menuLiveData.value = menuFull
+                }
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+                override fun onError(e: Throwable) {
 
-    private fun getMenu(){
-        menuLiveData.apply {
-            value = PizzaDatabase.pizzaDao.getAll()
-        }
+                }
+            })
     }
 
     fun searchByMenu(string: String?){
-        val correct : MutableList<PizzaEntity> = mutableListOf()
+        val menuToShow : MutableList<PizzaEntity> = mutableListOf()
         if (string!=null){
-            PizzaDatabase.pizzaDao.getAll().forEach{
+            menuFull.forEach{
                 if((it.name.indexOf(string, 0) != -1)
                     ||(it.description.indexOf(string, 0) != -1)){
-                    correct.add(it)
+                    menuToShow.add(it)
                 }
             }
         }
-
-        menuLiveData.value = correct
+        menuLiveData.value = menuToShow
     }
 }
