@@ -8,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yummypizza.databinding.MenuFragmentBinding
 import com.example.yummypizza.ui.adapters.MenuAdapter
 import com.example.yummypizza.ui.adapters.OnMenuItemCLickListener
 import com.example.yummypizza.ui.screens.menu.item.MenuItemBottomSheet
+import com.example.yummypizza.utils.diffutils.MenuDiffUtil
 
 class MenuFragment : Fragment(), OnMenuItemCLickListener {
 
@@ -29,7 +31,7 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = MenuFragmentBinding.inflate(inflater, container, false)
 
         setOnClickListeners()
@@ -56,8 +58,10 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener {
         recyclerView.adapter = adapter
 
         viewModel.menuLiveData.observe(viewLifecycleOwner, {
+            val diffUtil = MenuDiffUtil(adapter.menu, it)
+            val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(diffUtil)
             adapter.menu = it
-            adapter.notifyDataSetChanged()
+            diffResult.dispatchUpdatesTo(adapter)
         })
     }
 
@@ -80,7 +84,7 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener {
 
     override fun onClick(position: Int) {
         val actualMenu = viewModel.menuLiveData.value!!
-        val itemLookerBottomSheet = MenuItemBottomSheet.newInstance(actualMenu[position].id - 1)
+        val itemLookerBottomSheet = MenuItemBottomSheet.newInstance(actualMenu[position].id)
         itemLookerBottomSheet.show(childFragmentManager, TAG)
     }
 
