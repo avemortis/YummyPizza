@@ -34,7 +34,7 @@ class MenuAdapter(var menu : List<PizzaEntity>,
         holder.title.text = menu[position].name
         holder.info.text = menu[position].description
         holder.price.text = menu[position].price.toString()
-        Picasso.get().load(menu[position].imageUrl).into(holder.image)
+        Picasso.get().load(menu[position].imageUrls[0]).into(holder.image)
     }
 
     override fun getItemCount() = menu.size

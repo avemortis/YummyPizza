@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.example.yummypizza.data.api.PizzaService
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.yummypizza.databinding.MenuItemBottomSheetBinding
 import com.squareup.picasso.Picasso
@@ -38,11 +39,12 @@ class MenuItemBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun startLiveDataWatch(){
-        viewModel.getPizzaLiveData().observe(this, {
+        val service = PizzaService()
+        viewModel.getPizzaLiveData(service).observe(this, {
             binding.menuBottomSheetTitle.text = it.name
             binding.menuBottomSheetDescription.text = it.description
             binding.menuBottomSheetAddtocart.text = "${binding.menuBottomSheetAddtocart.text} ${it.price}"
-            Picasso.get().load(it.imageUrl).into(binding.menuBottomSheetImage)
+            Picasso.get().load(it.imageUrls[0]).into(binding.menuBottomSheetImage)
         })
     }
 

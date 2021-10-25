@@ -1,5 +1,6 @@
 package com.example.yummypizza.data.api
 
+import android.util.Log
 import com.example.yummypizza.data.entities.PizzaEntity
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -22,4 +23,8 @@ class PizzaService {
     }
 
     fun getAllPizzas() : Single<List<PizzaEntity>> = pizzaApi.getAllPizzas()
+
+    fun getPizzaById(id : Int) : Single<PizzaEntity> {
+        return pizzaApi.getPizzaById(id)
+    }
 }

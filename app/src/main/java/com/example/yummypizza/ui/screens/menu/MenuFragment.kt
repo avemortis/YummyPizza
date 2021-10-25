@@ -2,7 +2,6 @@ package com.example.yummypizza.ui.screens.menu
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +10,16 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yummypizza.data.api.PizzaService
+import com.example.yummypizza.data.entities.PizzaEntity
 import com.example.yummypizza.databinding.MenuFragmentBinding
 import com.example.yummypizza.ui.adapters.MenuAdapter
 import com.example.yummypizza.ui.adapters.OnMenuItemCLickListener
 import com.example.yummypizza.ui.screens.menu.item.MenuItemBottomSheet
 import com.example.yummypizza.utils.diffutils.MenuDiffUtil
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 class MenuFragment : Fragment(), OnMenuItemCLickListener {
 
@@ -24,7 +27,8 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: MenuViewModel
-    private val compositeDisposable = CompositeDisposable()
+
+    private val adapter = MenuAdapter(emptyList(), this)
 
     companion object {
         fun newInstance() = MenuFragment()
@@ -36,6 +40,9 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = MenuFragmentBinding.inflate(inflater, container, false)
+
+        prepareRecyclerView()
+
         return binding.root
     }
 
@@ -47,7 +54,7 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener {
             viewModel.getMenu(PizzaService())
         }
 
-        startLiveDataWatch()
+        subscribeOnMenu()
         setSearchView()
     }
 
@@ -56,20 +63,39 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener {
         super.onDestroy()
     }
 
-    private fun setOnClickListeners(){
-    }
-
-    private fun startLiveDataWatch(){
+    private fun prepareRecyclerView(){
         val recyclerView = binding.menuRecyclerView
-        val adapter = MenuAdapter(mutableListOf(), this)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
+    }
 
-        viewModel.menuLiveData.observe(viewLifecycleOwner, {
-            val diffUtil = MenuDiffUtil(adapter.menu, it)
-            val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(diffUtil)
-            adapter.menu = it
-            diffResult.dispatchUpdatesTo(adapter)
+    private fun refreshRecyclerView(list : List<PizzaEntity>){
+        val diffUtil = MenuDiffUtil(adapter.menu, list)
+        val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(diffUtil)
+        adapter.menu = list
+        diffResult.dispatchUpdatesTo(adapter)
+    }
+
+    private fun subscribeOnMenu(){
+        viewModel.menuObservable
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .toObservable()
+            .subscribe(object : Observer<List<PizzaEntity>>{
+                override fun onSubscribe(d: Disposable) {
+                    viewModel.compositeDisposable.add(d)
+                }
+
+                override fun onNext(t: List<PizzaEntity>) {
+                    refreshRecyclerView(t)
+                }
+
+                override fun onError(e: Throwable) {
+                    e.printStackTrace()
+                }
+
+                override fun onComplete() {
+                }
         })
     }
 
@@ -87,11 +113,8 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener {
         })
     }
 
-    private fun showMenuItemLooker(){
-    }
-
     override fun onClick(position: Int) {
-        val actualMenu = viewModel.menuLiveData.value!!
+        val actualMenu = viewModel.menuObservable.value
         val itemLookerBottomSheet = MenuItemBottomSheet.newInstance(actualMenu[position].id)
         itemLookerBottomSheet.show(childFragmentManager, TAG)
     }
