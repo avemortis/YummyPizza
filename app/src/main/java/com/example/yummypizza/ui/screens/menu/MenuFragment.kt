@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yummypizza.data.api.PizzaService
@@ -15,13 +16,16 @@ import com.example.yummypizza.databinding.MenuFragmentBinding
 import com.example.yummypizza.ui.adapters.MenuAdapter
 import com.example.yummypizza.ui.adapters.OnMenuItemCLickListener
 import com.example.yummypizza.ui.screens.menu.item.MenuItemBottomSheet
+import com.example.yummypizza.ui.screens.preview.PreviewFragment
 import com.example.yummypizza.utils.diffutils.MenuDiffUtil
+import com.example.yummypizza.utils.navigation.FragmentNavigator
+import com.example.yummypizza.utils.navigation.FragmentNavigator.show
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class MenuFragment : Fragment(), OnMenuItemCLickListener {
+class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.OnImageItemClickListener {
 
     private var _binding: MenuFragmentBinding? = null
     private val binding get() = _binding!!
@@ -59,7 +63,10 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener {
     }
 
     override fun onDestroy() {
-        viewModel.compositeDisposable.clear()
+        try {
+            viewModel.compositeDisposable.clear()
+        } catch (e : Exception) {}
+
         super.onDestroy()
     }
 
@@ -87,6 +94,7 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener {
                 }
 
                 override fun onNext(t: List<PizzaEntity>) {
+                    if (t.isNotEmpty()) binding.menuProgress.isVisible = false
                     refreshRecyclerView(t)
                 }
 
@@ -113,10 +121,17 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener {
         })
     }
 
+
     override fun onClick(position: Int) {
         val actualMenu = viewModel.menuObservable.value
         val itemLookerBottomSheet = MenuItemBottomSheet.newInstance(actualMenu[position].id)
+        itemLookerBottomSheet.onImageItemClickListener = this
         itemLookerBottomSheet.show(childFragmentManager, TAG)
+    }
+
+    override fun onImageClick(id: Int) {
+        val fragment = PreviewFragment.newInstance()
+        fragment.show(parentFragmentManager, FragmentNavigator.root)
     }
 
 }
