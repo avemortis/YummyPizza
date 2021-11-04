@@ -8,7 +8,7 @@ import com.example.yummypizza.data.entities.PizzaEntity
 import com.example.yummypizza.databinding.MenuItemBinding
 import com.squareup.picasso.Picasso
 
-class MenuAdapter(var menu : List<PizzaEntity>,
+class MenuAdapter(var size : Int,
                   private val listener: OnMenuItemCLickListener)
     : RecyclerView.Adapter<MenuAdapter.MenuHolder>() {
 
@@ -34,7 +34,7 @@ class MenuAdapter(var menu : List<PizzaEntity>,
         listener.onCreateViewHolder(holder, position)
     }
 
-    override fun getItemCount() = menu.size
+    override fun getItemCount() = size
 
 
 }

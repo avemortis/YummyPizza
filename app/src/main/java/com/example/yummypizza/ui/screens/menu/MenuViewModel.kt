@@ -13,6 +13,8 @@ import io.reactivex.schedulers.Schedulers
 class MenuViewModel : ViewModel() {
     private lateinit var menuFull : List<PizzaEntity>
 
+    var prevMenu : List<PizzaEntity> = listOf()
+
     val menuObservable: BehaviorProcessor<List<PizzaEntity>> by lazy {
         val processor = BehaviorProcessor.create<List<PizzaEntity>>()
         processor.offer(listOf())
@@ -46,6 +48,7 @@ class MenuViewModel : ViewModel() {
                 }
             }
         }
+        prevMenu = menuObservable.value
         menuObservable.offer(menuToShow)
     }
 }

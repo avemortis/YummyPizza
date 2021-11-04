@@ -35,7 +35,7 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
     private lateinit var viewModel: MenuViewModel
     private val compositeDisposable = CompositeDisposable()
 
-    private val adapter = MenuAdapter(emptyList(), this)
+    private val adapter = MenuAdapter(0, this)
 
     companion object {
         fun newInstance() = MenuFragment()
@@ -79,9 +79,9 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
     }
 
     private fun refreshRecyclerView(list : List<PizzaEntity>){
-        val diffUtil = MenuDiffUtil(adapter.menu, list)
+        val diffUtil = MenuDiffUtil(viewModel.prevMenu, list)
         val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(diffUtil)
-        adapter.menu = list
+        adapter.size = list.size
         diffResult.dispatchUpdatesTo(adapter)
     }
 
