@@ -7,19 +7,27 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.example.yummypizza.MainActivity
 import com.example.yummypizza.R
+import com.example.yummypizza.appComponent
 import com.example.yummypizza.databinding.PreviewFragmentBinding
 import com.example.yummypizza.ui.adapters.PreviewPagerAdapter
+import com.example.yummypizza.utils.injections.ViewModelExtensions.injectViewModel
+
+import javax.inject.Inject
 
 class PreviewFragment : Fragment() {
 
     private var _binding: PreviewFragmentBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: PreviewViewModel
+
     companion object {
         fun newInstance() = PreviewFragment()
     }
 
-    private lateinit var viewModel: PreviewViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +39,9 @@ class PreviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(PreviewViewModel::class.java)
+
+        viewModelFactory = requireActivity().appComponent.viewModelFactory()
+        viewModel = injectViewModel(viewModelFactory)
 
         val activity = requireActivity() as MainActivity
         activity.changeWindowBars(false)

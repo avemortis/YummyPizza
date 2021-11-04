@@ -32,8 +32,6 @@ class MenuItemBottomSheet : BottomSheetDialogFragment() {
 
     var onImageItemClickListener: OnImageItemClickListener? = null
 
-    private val service = requireActivity().appComponent.getPizzaService()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -80,6 +78,7 @@ class MenuItemBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun watchLoadStatus(){
+        val service = requireActivity().appComponent.getPizzaService()
         viewModel.getSinglePizza(service)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

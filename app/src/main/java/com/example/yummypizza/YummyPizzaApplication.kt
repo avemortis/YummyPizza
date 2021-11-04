@@ -2,8 +2,8 @@ package com.example.yummypizza
 
 import android.app.Application
 import android.content.Context
-import com.example.yummypizza.data.components.DaggerPizzaServiceComponent
-import com.example.yummypizza.data.components.PizzaServiceComponent
+import com.example.yummypizza.utils.injections.components.DaggerPizzaServiceComponent
+import com.example.yummypizza.utils.injections.components.PizzaServiceComponent
 
 class YummyPizzaApplication : Application() {
     lateinit var pizzaServiceComponent: PizzaServiceComponent

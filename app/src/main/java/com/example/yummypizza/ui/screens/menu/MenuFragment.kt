@@ -38,8 +38,6 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
 
     private val adapter = MenuAdapter(0, this)
 
-    private val service = requireActivity().appComponent.getPizzaService()
-
     companion object {
         fun newInstance() = MenuFragment()
         const val TAG = "MenuFragment"
@@ -61,6 +59,7 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
         viewModel = ViewModelProvider(this).get(MenuViewModel::class.java)
 
         if (savedInstanceState == null) {
+            val service = requireActivity().appComponent.getPizzaService()
             viewModel.getMenu(service)
         }
 

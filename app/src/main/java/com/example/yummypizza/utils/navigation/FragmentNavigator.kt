@@ -3,6 +3,8 @@ package com.example.yummypizza.utils.navigation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.yummypizza.R
 
 object FragmentNavigator {
