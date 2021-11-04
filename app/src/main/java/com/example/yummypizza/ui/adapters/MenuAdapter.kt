@@ -8,9 +8,10 @@ import com.example.yummypizza.data.entities.PizzaEntity
 import com.example.yummypizza.databinding.MenuItemBinding
 import com.squareup.picasso.Picasso
 
-class MenuAdapter(var size : Int,
-                  private val listener: OnMenuItemCLickListener)
-    : RecyclerView.Adapter<MenuAdapter.MenuHolder>() {
+class MenuAdapter(
+    var size: Int,
+    private val listener: OnMenuItemCLickListener
+) : RecyclerView.Adapter<MenuAdapter.MenuHolder>() {
 
     class MenuHolder(binding: MenuItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val image = binding.menuItemImage
@@ -38,7 +39,8 @@ class MenuAdapter(var size : Int,
 
 
 }
-interface OnMenuItemCLickListener{
+
+interface OnMenuItemCLickListener {
     fun onClick(position: Int)
     fun onCreateViewHolder(holder: MenuAdapter.MenuHolder, position: Int)
 }
