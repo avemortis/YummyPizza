@@ -10,6 +10,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.yummypizza.appComponent
 import com.example.yummypizza.data.api.PizzaService
 import com.example.yummypizza.data.entities.PizzaEntity
 import com.example.yummypizza.databinding.MenuFragmentBinding
@@ -37,6 +38,8 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
 
     private val adapter = MenuAdapter(0, this)
 
+    private val service = requireActivity().appComponent.getPizzaService()
+
     companion object {
         fun newInstance() = MenuFragment()
         const val TAG = "MenuFragment"
@@ -58,7 +61,7 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
         viewModel = ViewModelProvider(this).get(MenuViewModel::class.java)
 
         if (savedInstanceState == null) {
-            viewModel.getMenu(PizzaService())
+            viewModel.getMenu(service)
         }
 
         subscribeOnMenu()

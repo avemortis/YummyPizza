@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import com.example.yummypizza.appComponent
 import com.example.yummypizza.data.api.PizzaService
 import com.example.yummypizza.data.entities.PizzaEntity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -30,6 +31,8 @@ class MenuItemBottomSheet : BottomSheetDialogFragment() {
     val compositeDisposable = CompositeDisposable()
 
     var onImageItemClickListener: OnImageItemClickListener? = null
+
+    private val service = requireActivity().appComponent.getPizzaService()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,7 +80,6 @@ class MenuItemBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun watchLoadStatus(){
-        val service = PizzaService()
         viewModel.getSinglePizza(service)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

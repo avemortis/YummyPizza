@@ -1,15 +1,13 @@
 package com.example.yummypizza.data.api
 
-import android.util.Log
 import com.example.yummypizza.data.entities.PizzaEntity
-import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
+import javax.inject.Inject
 
-class PizzaService {
+class PizzaService @Inject constructor() {
     private val pizzaApi : PizzaApi
 
     init {
