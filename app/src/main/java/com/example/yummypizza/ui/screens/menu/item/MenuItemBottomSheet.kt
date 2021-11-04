@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.example.yummypizza.data.api.PizzaService
+import com.example.yummypizza.data.entities.PizzaEntity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.yummypizza.databinding.MenuItemBottomSheetBinding
 import com.example.yummypizza.ui.screens.preview.PreviewFragment
@@ -14,7 +15,9 @@ import com.example.yummypizza.utils.navigation.FragmentNavigator
 import com.example.yummypizza.utils.navigation.FragmentNavigator.show
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
+import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
@@ -23,6 +26,8 @@ class MenuItemBottomSheet : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: MenuItemBottomSheetViewModel
+
+    val compositeDisposable = CompositeDisposable()
 
     var onImageItemClickListener: OnImageItemClickListener? = null
 
@@ -44,57 +49,50 @@ class MenuItemBottomSheet : BottomSheetDialogFragment() {
         viewModel = ViewModelProvider(this).get(MenuItemBottomSheetViewModel::class.java)
         viewModel.bundle = requireArguments()
 
-        if (savedInstanceState == null) {
-            viewModel.getPizza(PizzaService())
-            watchLoadStatus()
-        } else {
-            prepareViews()
-        }
+        setOnClickListeners()
+        watchLoadStatus()
     }
 
     override fun onDestroy() {
-        viewModel.compositeDisposable.dispose()
+        compositeDisposable.dispose()
         super.onDestroy()
     }
 
     private fun setOnClickListeners(){
         binding.menuBottomSheetImage.setOnClickListener {
             try {
-                onImageItemClickListener?.onImageClick(viewModel.pizzaEntity.id)
+                onImageItemClickListener?.onImageClick(viewModel.index)
                 this.dismiss()
             } catch (e : Exception) {
             }
         }
     }
 
-    fun prepareViews(){
-        try {
-            binding.menuBottomSheetTitle.text = viewModel.pizzaEntity.name
-            binding.menuBottomSheetDescription.text = viewModel.pizzaEntity.description
-            binding.menuBottomSheetAddtocart.text = "${binding.menuBottomSheetAddtocart.text} ${viewModel.pizzaEntity.price}"
-            binding.itemProgress.isVisible = false
-            Picasso.get().load(viewModel.pizzaEntity.imageUrls[0]).into(binding.menuBottomSheetImage)
-        } catch (e : Exception) {
-            viewModel.getPizza(PizzaService())
-            watchLoadStatus()
-        }
+    fun prepareViews(pizzaEntity: PizzaEntity){
+        binding.menuBottomSheetTitle.text = pizzaEntity.name
+        binding.menuBottomSheetDescription.text = pizzaEntity.description
+        binding.menuBottomSheetAddtocart.text = "${binding.menuBottomSheetAddtocart.text} ${pizzaEntity.price}"
+        binding.itemProgress.isVisible = false
+        Picasso.get().load(pizzaEntity.imageUrls[0]).into(binding.menuBottomSheetImage)
     }
 
     private fun watchLoadStatus(){
-        viewModel.loadStatus
+        val service = PizzaService()
+        viewModel.getSinglePizza(service)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Boolean> {
+            .subscribe(object : SingleObserver<PizzaEntity>{
                 override fun onSubscribe(d: Disposable) {
-                    viewModel.compositeDisposable.add(d)
+                    compositeDisposable.add(d)
                 }
 
-                override fun onNext(t: Boolean) {
-                    prepareViews()
-                    setOnClickListeners()
+                override fun onSuccess(t: PizzaEntity) {
+                    prepareViews(t)
                 }
-                override fun onError(e: Throwable) {}
-                override fun onComplete() {}
+
+                override fun onError(e: Throwable) {
+                }
+
             })
     }
 

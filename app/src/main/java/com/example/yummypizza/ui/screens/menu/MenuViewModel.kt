@@ -12,7 +12,6 @@ import io.reactivex.schedulers.Schedulers
 
 class MenuViewModel : ViewModel() {
     private lateinit var menuFull : List<PizzaEntity>
-    val compositeDisposable = CompositeDisposable()
 
     val menuObservable: BehaviorProcessor<List<PizzaEntity>> by lazy {
         val processor = BehaviorProcessor.create<List<PizzaEntity>>()
@@ -30,10 +29,9 @@ class MenuViewModel : ViewModel() {
                     menuObservable.offer(t)
                 }
                 override fun onSubscribe(d: Disposable) {
-                    compositeDisposable.add(d)
                 }
                 override fun onError(e: Throwable) {
-
+                    getMenu(service)
                 }
             })
     }

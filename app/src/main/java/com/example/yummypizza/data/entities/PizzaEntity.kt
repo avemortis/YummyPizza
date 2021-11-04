@@ -2,7 +2,7 @@ package com.example.yummypizza.data.entities
 
 import com.google.gson.annotations.SerializedName
 
-class PizzaEntity (
+data class PizzaEntity (
     @SerializedName("id") val id: Int,
     @SerializedName("name") val name: String,
     @SerializedName("price") val price: Int,

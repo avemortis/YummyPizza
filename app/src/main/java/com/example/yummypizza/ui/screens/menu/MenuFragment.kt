@@ -20,8 +20,10 @@ import com.example.yummypizza.ui.screens.preview.PreviewFragment
 import com.example.yummypizza.utils.diffutils.MenuDiffUtil
 import com.example.yummypizza.utils.navigation.FragmentNavigator
 import com.example.yummypizza.utils.navigation.FragmentNavigator.show
+import com.squareup.picasso.Picasso
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
@@ -31,6 +33,7 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
     private val binding get() = _binding!!
 
     private lateinit var viewModel: MenuViewModel
+    private val compositeDisposable = CompositeDisposable()
 
     private val adapter = MenuAdapter(emptyList(), this)
 
@@ -59,12 +62,11 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
         }
 
         subscribeOnMenu()
-        setSearchView()
     }
 
     override fun onDestroy() {
         try {
-            viewModel.compositeDisposable.clear()
+            compositeDisposable.clear()
         } catch (e : Exception) {}
 
         super.onDestroy()
@@ -90,12 +92,13 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
             .toObservable()
             .subscribe(object : Observer<List<PizzaEntity>>{
                 override fun onSubscribe(d: Disposable) {
-                    viewModel.compositeDisposable.add(d)
+                    compositeDisposable.add(d)
                 }
 
                 override fun onNext(t: List<PizzaEntity>) {
                     if (t.isNotEmpty()) binding.menuProgress.isVisible = false
                     refreshRecyclerView(t)
+                    setSearchView()
                 }
 
                 override fun onError(e: Throwable) {
@@ -127,6 +130,13 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
         val itemLookerBottomSheet = MenuItemBottomSheet.newInstance(actualMenu[position].id)
         itemLookerBottomSheet.onImageItemClickListener = this
         itemLookerBottomSheet.show(childFragmentManager, TAG)
+    }
+
+    override fun onCreateViewHolder(holder: MenuAdapter.MenuHolder, position: Int) {
+        holder.title.text = viewModel.menuObservable.value[position].name
+        holder.info.text = viewModel.menuObservable.value[position].description
+        holder.price.text = viewModel.menuObservable.value[position].price.toString()
+        Picasso.get().load(viewModel.menuObservable.value[position].imageUrls[0]).into(holder.image)
     }
 
     override fun onImageClick(id: Int) {

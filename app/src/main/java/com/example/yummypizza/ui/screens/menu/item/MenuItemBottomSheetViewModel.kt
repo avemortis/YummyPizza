@@ -18,27 +18,7 @@ import io.reactivex.subjects.PublishSubject
 
 class MenuItemBottomSheetViewModel : ViewModel() {
     lateinit var bundle: Bundle
-    private val index get() = bundle.getInt(MenuItemBottomSheet.TAG)
-    lateinit var pizzaEntity: PizzaEntity
+    val index get() = bundle.getInt(MenuItemBottomSheet.TAG)
 
-    val compositeDisposable = CompositeDisposable()
-    val loadStatus: PublishSubject<Boolean> = PublishSubject.create()
-
-    fun getPizza(service: PizzaService) {
-        service.getPizzaById(index)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : SingleObserver<PizzaEntity> {
-                override fun onSubscribe(d: Disposable) {
-                }
-
-                override fun onSuccess(t: PizzaEntity) {
-                    pizzaEntity = t
-                    loadStatus.onNext(true)
-                }
-
-                override fun onError(e: Throwable) {
-                }
-            })
-    }
+    fun getSinglePizza(service: PizzaService) = service.getPizzaById(index)
 }
