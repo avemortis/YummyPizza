@@ -66,7 +66,6 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener,
         viewModel = injectViewModel(viewModelFactory)
 
         if (savedInstanceState == null) {
-            //val service = requireActivity().appComponent.getPizzaService()
             viewModel.getMenu(viewLifecycleOwner)
         }
 
@@ -142,18 +141,16 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener,
     }
 
     override fun onCreateViewHolder(holder: MenuAdapter.MenuHolder, position: Int) {
-        try {
-            val actualMenu = viewModel.menuObservable.value!!
-            holder.title.text = actualMenu[position].name
-            holder.info.text = actualMenu[position].description
-            holder.price.text = actualMenu[position].price.toString()
-            Picasso.get().load(actualMenu[position].firstImageUrl).into(holder.image)
-        } catch (e: Exception){}
+        val actualMenu = viewModel.menuObservable.value!!
+        holder.title.text = actualMenu[position].name
+        holder.info.text = actualMenu[position].description
+        holder.price.text = actualMenu[position].price.toString()
+        Picasso.get().load(actualMenu[position].firstImageUrl).into(holder.image)
 
     }
 
     override fun onImageClick(id: Int) {
-        val fragment = PreviewFragment.newInstance()
+        val fragment = PreviewFragment.newInstance(id)
         fragment.show(parentFragmentManager, FragmentNavigator.root)
     }
 }

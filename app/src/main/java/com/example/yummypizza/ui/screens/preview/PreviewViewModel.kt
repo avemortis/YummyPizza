@@ -1,18 +1,15 @@
 package com.example.yummypizza.ui.screens.preview
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
+import com.example.yummypizza.data.database.PizzaDatabaseRepository
 import com.example.yummypizza.data.entities.PizzaEntity
+import com.example.yummypizza.ui.screens.menu.item.MenuItemBottomSheet
 import javax.inject.Inject
 
 class PreviewViewModel @Inject constructor() : ViewModel() {
-    val pizzaEntity = PizzaEntity(
-        1,
-        "God, I love this pizza",
-        300,
-        "2",
-        listOf(
-            "https://www.delonghi.com/Global/recipes/multifry/3.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg"
-        ) as MutableList<String>
-    )
+    lateinit var bundle: Bundle
+    val index get() = bundle.getInt(MenuItemBottomSheet.TAG)
+
+    fun getSinglePizza() = PizzaDatabaseRepository.getSinglePizza(index)
 }

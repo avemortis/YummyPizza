@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.yummypizza.data.api.PizzaService
+import com.example.yummypizza.data.database.PizzaDatabaseRepository
 import com.example.yummypizza.data.entities.PizzaEntity
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -21,5 +22,5 @@ class MenuItemBottomSheetViewModel @Inject constructor () : ViewModel() {
     lateinit var bundle: Bundle
     val index get() = bundle.getInt(MenuItemBottomSheet.TAG)
 
-    fun getSinglePizza(service: PizzaService) = service.getPizzaById(index)
+    fun getSinglePizza() = PizzaDatabaseRepository.getSinglePizza(index)
 }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.example.yummypizza.R
 import com.example.yummypizza.databinding.PreviewFragmentItemBinding
 import com.squareup.picasso.Picasso
@@ -23,5 +24,12 @@ class PreviewPagerAdapter (val context: Context, val urls : List<String>) : Page
         Picasso.get().load(urls[position]).into(binding.imageView)
         container.addView(binding.root)
         return binding.root
+    }
+
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        val cont = container as ViewPager
+        val view = `object` as View
+        cont.removeView(view)
+
     }
 }

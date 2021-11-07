@@ -48,9 +48,6 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : SingleObserver<List<PizzaEntity>> {
                 override fun onSuccess(t: List<PizzaEntity>) {
-                    t.forEach {
-                        it.firstImageUrl = it.imageUrls[0]
-                    }
                     PizzaDatabaseRepository.addAllPizzas(t)
                 }
 

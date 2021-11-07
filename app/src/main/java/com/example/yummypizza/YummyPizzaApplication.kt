@@ -20,27 +20,6 @@ class YummyPizzaApplication : Application() {
         PizzaDatabaseRepository.init(this)
         appComponent = DaggerAppComponent.create()
     }
-
-    fun getMenuAndAddToDatabase(service: PizzaService) {
-        service.getAllPizzas()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : SingleObserver<List<PizzaEntity>> {
-                override fun onSuccess(t: List<PizzaEntity>) {
-                    t.forEach {
-                        it.firstImageUrl = it.imageUrls[0]
-                    }
-                    PizzaDatabaseRepository.addAllPizzas(t)
-                }
-
-                override fun onSubscribe(d: Disposable) {
-                }
-
-                override fun onError(e: Throwable) {
-                    getMenuAndAddToDatabase(service)
-                }
-            })
-    }
 }
 
 

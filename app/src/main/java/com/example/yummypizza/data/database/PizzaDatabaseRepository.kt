@@ -21,13 +21,12 @@ object PizzaDatabaseRepository {
 
     fun addAllPizzas(list : List<PizzaEntity>) {
         executor.execute {
-            pizzaDAO.addPizzas(list)
-
             list.forEach { entity ->
-                entity.imageUrls.forEach { url ->
-                    val pic = PizzaPicture(0, entity.id - 1, url)
-                    addPic(pic)
+                entity.imageUrls.forEach{
+                    pizzaDAO.addPic(PizzaPicture(entity.id, it))
                 }
+                entity.firstImageUrl = entity.imageUrls[0]
+                pizzaDAO.addSinglePizza(entity)
             }
         }
     }
@@ -36,13 +35,7 @@ object PizzaDatabaseRepository {
 
     fun getSinglePizza(id: Int) = pizzaDAO.getSinglePizza(id)
 
-    fun getPizzasLiveData() = pizzaDAO.getPizzasLiveData().apply {
-        value?.forEach{ pizza ->
-            pizzaDAO.getPicsForPizza(pizza.key).forEach {
-                pizza.imageUrls.add(it.url)
-            }
-        }
-    }
+    fun getPizzasLiveData() = pizzaDAO.getPizzasLiveData()
 
     fun getSinglePizzaLiveData(id: Int) = pizzaDAO.getSinglePizzaLiveData(id)
 

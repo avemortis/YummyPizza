@@ -8,14 +8,14 @@ import javax.inject.Inject
 
 @Entity
 data class PizzaEntity(
+    @PrimaryKey
     @SerializedName("id") val id: Int,
     @SerializedName("name") val name: String,
     @SerializedName("price") val price: Int,
     @SerializedName("description") val description: String,
     @Ignore
     @SerializedName("imageUrls") val imageUrls: MutableList<String>,
-    var firstImageUrl: String = String(),
-    @PrimaryKey(autoGenerate = true) var key: Int = 0
+    var firstImageUrl: String = String()
 ) {
     constructor(id: Int, name: String, price: Int, description: String) : this(id, name, price, description, mutableListOf())
 }

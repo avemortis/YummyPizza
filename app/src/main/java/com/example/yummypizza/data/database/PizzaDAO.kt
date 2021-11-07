@@ -46,7 +46,7 @@ interface PizzaDAO {
     fun getAllPics() : LiveData<List<PizzaPicture>>
 
     @Query("SELECT * FROM PizzaPicture WHERE pizzaKey LIKE:id")
-    fun getPicsForPizza(id: Int) : List<PizzaPicture>
+    fun getPicsForPizza(id: Int) : Single<List<PizzaPicture>>
 
     @Delete
     fun deletePic(pic: PizzaPicture)

@@ -7,17 +7,11 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.example.yummypizza.appComponent
-import com.example.yummypizza.data.api.PizzaService
 import com.example.yummypizza.data.entities.PizzaEntity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.yummypizza.databinding.MenuItemBottomSheetBinding
-import com.example.yummypizza.ui.screens.preview.PreviewFragment
-import com.example.yummypizza.ui.screens.preview.PreviewViewModel
 import com.example.yummypizza.utils.injections.viewmodels.ViewModelExtensions.injectViewModel
-import com.example.yummypizza.utils.navigation.FragmentNavigator
-import com.example.yummypizza.utils.navigation.FragmentNavigator.show
 import com.squareup.picasso.Picasso
-import io.reactivex.Observer
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -82,12 +76,11 @@ class MenuItemBottomSheet : BottomSheetDialogFragment() {
         binding.menuBottomSheetAddtocart.text =
             "${binding.menuBottomSheetAddtocart.text} ${pizzaEntity.price}"
         binding.itemProgress.isVisible = false
-        Picasso.get().load(pizzaEntity.imageUrls[0]).into(binding.menuBottomSheetImage)
+        Picasso.get().load(pizzaEntity.firstImageUrl).into(binding.menuBottomSheetImage)
     }
 
     private fun watchLoadStatus() {
-        val service = requireActivity().appComponent.getPizzaService()
-        viewModel.getSinglePizza(service)
+        viewModel.getSinglePizza()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : SingleObserver<PizzaEntity> {
