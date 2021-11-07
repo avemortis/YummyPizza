@@ -9,13 +9,22 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.yummypizza.data.api.PizzaService
+import com.example.yummypizza.data.database.PizzaDatabaseRepository
+import com.example.yummypizza.data.entities.PizzaEntity
 import com.example.yummypizza.ui.screens.menu.MenuFragment
 import com.example.yummypizza.utils.navigation.FragmentNavigator
 import com.example.yummypizza.utils.navigation.FragmentNavigator.show
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        changeWindowBars(true)
 
         if (savedInstanceState == null){
             FragmentNavigator.setStartFragment(
@@ -24,9 +33,34 @@ class MainActivity : AppCompatActivity() {
                 MenuFragment.newInstance()
             )
         }
+        getMenuAndAddToDatabase(appComponent.getPizzaService())
+    }
 
-        setContentView(R.layout.activity_main)
-        changeWindowBars(true)
+    override fun onDestroy() {
+        super.onDestroy()
+        PizzaDatabaseRepository.clearPizzaDatabase()
+        PizzaDatabaseRepository.clearPictureDatabase()
+    }
+
+    fun getMenuAndAddToDatabase(service: PizzaService) {
+        service.getAllPizzas()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : SingleObserver<List<PizzaEntity>> {
+                override fun onSuccess(t: List<PizzaEntity>) {
+                    t.forEach {
+                        it.firstImageUrl = it.imageUrls[0]
+                    }
+                    PizzaDatabaseRepository.addAllPizzas(t)
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onError(e: Throwable) {
+                    getMenuAndAddToDatabase(service)
+                }
+            })
     }
 
     fun changeWindowBars(toLight : Boolean){

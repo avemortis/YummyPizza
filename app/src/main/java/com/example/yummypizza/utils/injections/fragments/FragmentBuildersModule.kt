@@ -1,8 +1,11 @@
 package com.example.yummypizza.utils.injections.fragments
 
+import com.example.yummypizza.ui.screens.preview.PreviewFragment
 import dagger.Module
+import dagger.android.ContributesAndroidInjector
 
-@Suppress("unused")
 @Module
-class FragmentBuildersModule {
+abstract class FragmentBuildersModule {
+    @ContributesAndroidInjector
+    abstract fun contributePreviewFragment(): PreviewFragment
 }

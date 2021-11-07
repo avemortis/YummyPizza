@@ -14,7 +14,7 @@ import com.example.yummypizza.utils.injections.viewmodels.ViewModelExtensions.in
 
 import javax.inject.Inject
 
-class PreviewFragment @Inject constructor() : Fragment() {
+class PreviewFragment : Fragment() {
 
     private var _binding: PreviewFragmentBinding? = null
     private val binding get() = _binding!!

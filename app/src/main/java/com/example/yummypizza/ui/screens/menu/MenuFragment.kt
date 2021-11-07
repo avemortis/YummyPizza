@@ -28,6 +28,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.lang.Exception
 import javax.inject.Inject
 
 class MenuFragment : Fragment(), OnMenuItemCLickListener,
@@ -65,8 +66,8 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener,
         viewModel = injectViewModel(viewModelFactory)
 
         if (savedInstanceState == null) {
-            val service = requireActivity().appComponent.getPizzaService()
-            viewModel.getMenu(service)
+            //val service = requireActivity().appComponent.getPizzaService()
+            viewModel.getMenu(viewLifecycleOwner)
         }
 
         subscribeOnMenu()
@@ -134,17 +135,21 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener,
 
 
     override fun onClick(position: Int) {
-        val actualMenu = viewModel.menuObservable.value
+        val actualMenu = viewModel.menuObservable.value!!
         val itemLookerBottomSheet = MenuItemBottomSheet.newInstance(actualMenu[position].id)
         itemLookerBottomSheet.onImageItemClickListener = this
         itemLookerBottomSheet.show(childFragmentManager, TAG)
     }
 
     override fun onCreateViewHolder(holder: MenuAdapter.MenuHolder, position: Int) {
-        holder.title.text = viewModel.menuObservable.value[position].name
-        holder.info.text = viewModel.menuObservable.value[position].description
-        holder.price.text = viewModel.menuObservable.value[position].price.toString()
-        Picasso.get().load(viewModel.menuObservable.value[position].imageUrls[0]).into(holder.image)
+        try {
+            val actualMenu = viewModel.menuObservable.value!!
+            holder.title.text = actualMenu[position].name
+            holder.info.text = actualMenu[position].description
+            holder.price.text = actualMenu[position].price.toString()
+            Picasso.get().load(actualMenu[position].firstImageUrl).into(holder.image)
+        } catch (e: Exception){}
+
     }
 
     override fun onImageClick(id: Int) {
