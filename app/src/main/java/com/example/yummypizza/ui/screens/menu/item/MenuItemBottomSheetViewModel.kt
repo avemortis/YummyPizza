@@ -15,8 +15,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import javax.inject.Inject
 
-class MenuItemBottomSheetViewModel : ViewModel() {
+class MenuItemBottomSheetViewModel @Inject constructor () : ViewModel() {
     lateinit var bundle: Bundle
     val index get() = bundle.getInt(MenuItemBottomSheet.TAG)
 

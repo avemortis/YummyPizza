@@ -1,9 +1,8 @@
-package com.example.yummypizza.utils.injections.components
+package com.example.yummypizza.utils.injections
 
-import android.content.Context
 import com.example.yummypizza.data.api.PizzaService
-import com.example.yummypizza.utils.injections.ViewModelFactory
-import com.example.yummypizza.utils.injections.ViewModelModule
+import com.example.yummypizza.utils.injections.viewmodels.ViewModelFactory
+import com.example.yummypizza.utils.injections.viewmodels.ViewModelModule
 import dagger.Component
 import javax.inject.Singleton
 
@@ -11,7 +10,7 @@ import javax.inject.Singleton
 @Component(
     modules = [ViewModelModule::class]
 )
-interface PizzaServiceComponent {
+interface AppComponent {
 
 /*    @Component.Builder
     interface Builder {

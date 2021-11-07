@@ -1,4 +1,4 @@
-package com.example.yummypizza.utils.injections
+package com.example.yummypizza.utils.injections.viewmodels
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel

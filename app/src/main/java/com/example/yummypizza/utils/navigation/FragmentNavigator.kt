@@ -13,6 +13,7 @@ object FragmentNavigator {
     fun setStartFragment(fragmentManager: FragmentManager, containerId: Int, fragment: Fragment){
         fragmentManager.beginTransaction()
             .add(containerId, fragment)
+            .addToBackStack(fragmentManager.backStackEntryCount.toString())
             .commit()
     }
 

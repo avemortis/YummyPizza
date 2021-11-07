@@ -1,5 +1,6 @@
 package com.example.yummypizza.ui.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,12 +33,13 @@ class MenuAdapter(
     }
 
     override fun onBindViewHolder(holder: MenuHolder, position: Int) {
-        listener.onCreateViewHolder(holder, position)
+        if (position != -1){
+            Log.d("ADAPTER", position.toString())
+            listener.onCreateViewHolder(holder, position)
+        }
     }
 
     override fun getItemCount() = size
-
-
 }
 
 interface OnMenuItemCLickListener {

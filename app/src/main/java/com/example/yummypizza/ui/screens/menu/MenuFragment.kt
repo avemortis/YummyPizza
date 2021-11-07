@@ -6,19 +6,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.MainThread
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yummypizza.appComponent
-import com.example.yummypizza.data.api.PizzaService
 import com.example.yummypizza.data.entities.PizzaEntity
 import com.example.yummypizza.databinding.MenuFragmentBinding
 import com.example.yummypizza.ui.adapters.MenuAdapter
 import com.example.yummypizza.ui.adapters.OnMenuItemCLickListener
 import com.example.yummypizza.ui.screens.menu.item.MenuItemBottomSheet
 import com.example.yummypizza.ui.screens.preview.PreviewFragment
+import com.example.yummypizza.ui.adapters.LinearLayoutManagerWrapper
 import com.example.yummypizza.utils.diffutils.MenuDiffUtil
+import com.example.yummypizza.utils.injections.viewmodels.ViewModelExtensions.injectViewModel
 import com.example.yummypizza.utils.navigation.FragmentNavigator
 import com.example.yummypizza.utils.navigation.FragmentNavigator.show
 import com.squareup.picasso.Picasso
@@ -27,12 +28,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.OnImageItemClickListener {
+class MenuFragment : Fragment(), OnMenuItemCLickListener,
+    MenuItemBottomSheet.OnImageItemClickListener {
 
     private var _binding: MenuFragmentBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: MenuViewModel
     private val compositeDisposable = CompositeDisposable()
 
@@ -56,7 +61,8 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MenuViewModel::class.java)
+        viewModelFactory = requireActivity().appComponent.viewModelFactory()
+        viewModel = injectViewModel(viewModelFactory)
 
         if (savedInstanceState == null) {
             val service = requireActivity().appComponent.getPizzaService()
@@ -67,39 +73,39 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
     }
 
     override fun onDestroy() {
-        try {
-            compositeDisposable.clear()
-        } catch (e : Exception) {}
-
         super.onDestroy()
+        compositeDisposable.clear()
     }
 
-    private fun prepareRecyclerView(){
+    private fun prepareRecyclerView() {
         val recyclerView = binding.menuRecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = LinearLayoutManagerWrapper(requireContext())
         recyclerView.adapter = adapter
     }
 
-    private fun refreshRecyclerView(list : List<PizzaEntity>){
+    @MainThread
+    private fun refreshRecyclerView(list: List<PizzaEntity>) {
         val diffUtil = MenuDiffUtil(viewModel.prevMenu, list)
-        val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(diffUtil)
+        val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffUtil)
         adapter.size = list.size
         diffResult.dispatchUpdatesTo(adapter)
     }
 
-    private fun subscribeOnMenu(){
+    private fun subscribeOnMenu() {
         viewModel.menuObservable
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .toObservable()
-            .subscribe(object : Observer<List<PizzaEntity>>{
+            .subscribe(object : Observer<List<PizzaEntity>> {
                 override fun onSubscribe(d: Disposable) {
                     compositeDisposable.add(d)
                 }
 
                 override fun onNext(t: List<PizzaEntity>) {
-                    if (t.isNotEmpty()) binding.menuProgress.isVisible = false
-                    refreshRecyclerView(t)
+                    if (t.isNotEmpty()) {
+                        binding.menuProgress.isVisible = false
+                        refreshRecyclerView(t)
+                    }
                     setSearchView()
                 }
 
@@ -109,11 +115,11 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
 
                 override fun onComplete() {
                 }
-        })
+            })
     }
 
-    private fun setSearchView(){
-        binding.menuSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+    private fun setSearchView() {
+        binding.menuSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
@@ -145,5 +151,4 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener, MenuItemBottomSheet.On
         val fragment = PreviewFragment.newInstance()
         fragment.show(parentFragmentManager, FragmentNavigator.root)
     }
-
 }

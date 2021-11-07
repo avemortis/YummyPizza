@@ -9,8 +9,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.processors.BehaviorProcessor
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class MenuViewModel : ViewModel() {
+class MenuViewModel @Inject constructor() : ViewModel() {
     private lateinit var menuFull : List<PizzaEntity>
 
     var prevMenu : List<PizzaEntity> = listOf()

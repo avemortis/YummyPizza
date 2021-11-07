@@ -10,11 +10,11 @@ import com.example.yummypizza.R
 import com.example.yummypizza.appComponent
 import com.example.yummypizza.databinding.PreviewFragmentBinding
 import com.example.yummypizza.ui.adapters.PreviewPagerAdapter
-import com.example.yummypizza.utils.injections.ViewModelExtensions.injectViewModel
+import com.example.yummypizza.utils.injections.viewmodels.ViewModelExtensions.injectViewModel
 
 import javax.inject.Inject
 
-class PreviewFragment : Fragment() {
+class PreviewFragment @Inject constructor() : Fragment() {
 
     private var _binding: PreviewFragmentBinding? = null
     private val binding get() = _binding!!

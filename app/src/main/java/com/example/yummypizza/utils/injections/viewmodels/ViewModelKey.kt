@@ -1,4 +1,4 @@
-package com.example.yummypizza.utils.injections
+package com.example.yummypizza.utils.injections.viewmodels
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

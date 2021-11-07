@@ -2,20 +2,20 @@ package com.example.yummypizza
 
 import android.app.Application
 import android.content.Context
-import com.example.yummypizza.utils.injections.components.DaggerPizzaServiceComponent
-import com.example.yummypizza.utils.injections.components.PizzaServiceComponent
+import com.example.yummypizza.utils.injections.AppComponent
+import com.example.yummypizza.utils.injections.DaggerAppComponent
 
 class YummyPizzaApplication : Application() {
-    lateinit var pizzaServiceComponent: PizzaServiceComponent
+    lateinit var appComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()
-        pizzaServiceComponent = DaggerPizzaServiceComponent.create()
+        appComponent = DaggerAppComponent.create()
     }
 }
 
-val Context.appComponent: PizzaServiceComponent
+val Context.appComponent: AppComponent
 get() = when (this) {
-    is YummyPizzaApplication -> pizzaServiceComponent
+    is YummyPizzaApplication -> appComponent
     else -> this.applicationContext.appComponent
 }
