@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.yummypizza.data.api.PizzaService
+import com.example.yummypizza.data.database.PizzaDatabase
 import com.example.yummypizza.data.database.PizzaDatabaseRepository
 import com.example.yummypizza.data.entities.PizzaEntity
 import com.example.yummypizza.ui.screens.menu.MenuFragment
@@ -38,8 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        PizzaDatabaseRepository.clearPizzaDatabase()
-        PizzaDatabaseRepository.clearPictureDatabase()
+        deleteDatabase(PizzaDatabaseRepository.DATABASE_NAME)
     }
 
     fun getMenuAndAddToDatabase(service: PizzaService) {

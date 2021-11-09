@@ -6,9 +6,8 @@ import com.example.yummypizza.data.entities.PizzaEntity
 import com.example.yummypizza.data.entities.PizzaPicture
 import java.util.concurrent.Executors
 
-private const val DATABASE_NAME = "yummy_pizza_database"
-
 object PizzaDatabaseRepository {
+    const val DATABASE_NAME = "yummy_pizza_database"
     private lateinit var database: PizzaDatabase
     private lateinit var pizzaDAO: PizzaDAO
     private val executor = Executors.newSingleThreadExecutor()
