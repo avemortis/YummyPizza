@@ -33,8 +33,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.root_fragment,
                 MenuFragment.newInstance()
             )
+            getMenuAndAddToDatabase(appComponent.getPizzaService())
         }
-        getMenuAndAddToDatabase(appComponent.getPizzaService())
+
     }
 
     override fun onDestroy() {
