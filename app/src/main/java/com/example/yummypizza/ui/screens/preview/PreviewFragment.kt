@@ -104,7 +104,7 @@ class PreviewFragment : Fragment() {
                     val list: MutableList<String> = mutableListOf()
                     t.forEach { list.add(it.url) }
                     setPagerAdapter(list)
-                    setScrollState(binding.previewPager.currentItem, t.size)
+                    setScrollState(binding.previewPager.currentItem + 1, t.size)
                 }
 
                 override fun onError(e: Throwable) {
