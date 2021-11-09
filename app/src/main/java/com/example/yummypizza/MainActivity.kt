@@ -48,7 +48,8 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : SingleObserver<List<PizzaEntity>> {
                 override fun onSuccess(t: List<PizzaEntity>) {
-                    PizzaDatabaseRepository.addAllPizzas(t)
+                    val defaultPicture = appComponent.pictureEntity()
+                    PizzaDatabaseRepository.addAllPizzas(t, defaultPicture)
                 }
 
                 override fun onSubscribe(d: Disposable) {

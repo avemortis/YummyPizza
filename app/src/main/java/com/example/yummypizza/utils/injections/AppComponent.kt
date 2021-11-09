@@ -18,5 +18,5 @@ interface AppComponent {
 
     fun viewModelFactory(): ViewModelFactory
 
-    //fun pictureEntity(): PizzaPicture
+    fun pictureEntity(): PizzaPicture
 }

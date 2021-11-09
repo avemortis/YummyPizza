@@ -18,11 +18,13 @@ object PizzaDatabaseRepository {
         }
     }
 
-    fun addAllPizzas(list : List<PizzaEntity>) {
+    fun addAllPizzas(list : List<PizzaEntity>, defaultPicture: PizzaPicture) {
         executor.execute {
             list.forEach { entity ->
                 entity.imageUrls.forEach{
-                    pizzaDAO.addPic(PizzaPicture(entity.id, it))
+                    defaultPicture.pizzaKey = entity.id
+                    defaultPicture.url = it
+                    pizzaDAO.addPic(defaultPicture)
                 }
                 entity.firstImageUrl = entity.imageUrls[0]
                 pizzaDAO.addSinglePizza(entity)
