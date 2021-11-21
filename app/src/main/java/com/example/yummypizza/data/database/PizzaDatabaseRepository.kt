@@ -2,6 +2,11 @@ package com.example.yummypizza.data.database
 
 import android.content.Context
 import androidx.room.Room
+import com.example.yummypizza.data.database.cart.CartDao
+import com.example.yummypizza.data.database.cart.CartDatabase
+import com.example.yummypizza.data.database.menu.PizzaDAO
+import com.example.yummypizza.data.database.menu.PizzaDatabase
+import com.example.yummypizza.data.entities.CartItem
 import com.example.yummypizza.data.entities.PizzaEntity
 import com.example.yummypizza.data.entities.PizzaPicture
 import java.util.concurrent.Executors
@@ -10,13 +15,12 @@ object PizzaDatabaseRepository {
     const val DATABASE_NAME = "yummy_pizza_database"
     private lateinit var database: PizzaDatabase
     private lateinit var pizzaDAO: PizzaDAO
+
+    const val CART_DATABASE_NAME = "cart_database"
+    private lateinit var cart: CartDatabase
+    private lateinit var cartDao: CartDao
     private val executor = Executors.newSingleThreadExecutor()
     //Pizza
-    fun addPizza(pizzaEntity: PizzaEntity) {
-        executor.execute {
-            pizzaDAO.addSinglePizza(pizzaEntity)
-        }
-    }
 
     fun addAllPizzas(list : List<PizzaEntity>, defaultPicture: PizzaPicture) {
         executor.execute {
@@ -32,48 +36,27 @@ object PizzaDatabaseRepository {
         }
     }
 
+    fun updatePizza(pizzaEntity: PizzaEntity){
+        executor.execute {
+            pizzaDAO.updateSinglePizza(pizzaEntity)
+        }
+    }
+
     fun getPizzas() = pizzaDAO.getPizzas()
 
     fun getSinglePizza(id: Int) = pizzaDAO.getSinglePizza(id)
 
     fun getPizzasLiveData() = pizzaDAO.getPizzasLiveData()
 
-    fun getSinglePizzaLiveData(id: Int) = pizzaDAO.getSinglePizzaLiveData(id)
-
-    fun deletePizza(pizzaEntity: PizzaEntity) {
-        executor.execute {
-            pizzaDAO.deletePizza(pizzaEntity)
-        }
-    }
-
-    fun clearPizzaDatabase() {
-        executor.execute {
-            pizzaDAO.clearPizzaDatabase()
-        }
-    }
-
-    //Picture
-    fun addPic(picture: PizzaPicture){
-        executor.execute {
-            pizzaDAO.addPic(picture)
-        }
-    }
-
-    fun addAllPics(list: List<PizzaPicture>){
-        executor.execute {
-            pizzaDAO.addAllPics(list)
-        }
-    }
-
     fun getPicsForPizza(pizzaId: Int) = pizzaDAO.getPicsForPizza(pizzaId)
 
-    fun getAllPics() = pizzaDAO.getAllPics()
-
-    fun clearPictureDatabase() {
+    fun addToCart(cartItem: CartItem){
         executor.execute {
-            pizzaDAO.clearPicDatabase()
+            cartDao.addSinglePizza(cartItem)
         }
     }
+
+    fun getCart() = cartDao.getPizzasLiveData()
 
     fun init(context: Context) {
         database = Room.databaseBuilder(
@@ -83,5 +66,13 @@ object PizzaDatabaseRepository {
         ).build()
 
         pizzaDAO = database.DAO()
+
+        cart = Room.databaseBuilder(
+            context.applicationContext,
+            CartDatabase::class.java,
+            CART_DATABASE_NAME
+        ).build()
+
+        cartDao = cart.DAO()
     }
 }

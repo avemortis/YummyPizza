@@ -1,4 +1,4 @@
-package com.example.yummypizza.data.database
+package com.example.yummypizza.data.database.menu
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

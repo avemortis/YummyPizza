@@ -1,6 +1,7 @@
 package com.example.yummypizza.utils.injections
 
 import com.example.yummypizza.data.api.PizzaService
+import com.example.yummypizza.data.entities.CartItem
 import com.example.yummypizza.data.entities.PizzaPicture
 import com.example.yummypizza.ui.screens.preview.PreviewFragment
 import com.example.yummypizza.utils.injections.fragments.FragmentBuildersModule
@@ -19,4 +20,6 @@ interface AppComponent {
     fun viewModelFactory(): ViewModelFactory
 
     fun pictureEntity(): PizzaPicture
+
+    fun cartItem(): CartItem
 }

@@ -22,5 +22,7 @@ class MenuItemBottomSheetViewModel @Inject constructor () : ViewModel() {
     lateinit var bundle: Bundle
     val index get() = bundle.getInt(MenuItemBottomSheet.TAG)
 
+    lateinit var pizza : PizzaEntity
+
     fun getSinglePizza() = PizzaDatabaseRepository.getSinglePizza(index)
 }

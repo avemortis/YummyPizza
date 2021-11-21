@@ -10,6 +10,7 @@
     <string name="add_to_cart">Add to Cart</string>
     <string name="back_to_menu">Back to menu</string>
 
+    <string name="cart">Cart</string>
     <string name="cart_welcome_text">This is cart fragment</string>
     <string name="cart_to_menu">To menu</string>
     <string name="cart_confirm">Confirm the order</string>

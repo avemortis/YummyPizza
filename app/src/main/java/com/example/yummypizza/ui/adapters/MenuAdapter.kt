@@ -1,13 +1,9 @@
 package com.example.yummypizza.ui.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.yummypizza.data.entities.PizzaEntity
 import com.example.yummypizza.databinding.MenuItemBinding
-import com.squareup.picasso.Picasso
 
 class MenuAdapter(
     var size: Int,
@@ -34,7 +30,6 @@ class MenuAdapter(
 
     override fun onBindViewHolder(holder: MenuHolder, position: Int) {
         if (position != -1){
-            Log.d("ADAPTER", position.toString())
             listener.onCreateViewHolder(holder, position)
         }
     }

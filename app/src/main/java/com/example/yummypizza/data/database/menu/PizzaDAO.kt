@@ -1,4 +1,4 @@
-package com.example.yummypizza.data.database
+package com.example.yummypizza.data.database.menu
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
@@ -11,6 +11,9 @@ import io.reactivex.Single
 interface PizzaDAO {
     @Insert
     fun addSinglePizza(pizzaEntity: PizzaEntity)
+
+    @Update
+    fun updateSinglePizza(pizzaEntity: PizzaEntity)
 
     @Insert
     fun addPizzas(list : List<PizzaEntity>)

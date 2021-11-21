@@ -11,6 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import com.example.yummypizza.appComponent
+import com.example.yummypizza.data.database.PizzaDatabaseRepository
 import com.example.yummypizza.data.entities.PizzaEntity
 import com.example.yummypizza.databinding.MenuFragmentBinding
 import com.example.yummypizza.ui.adapters.MenuAdapter
@@ -18,6 +19,7 @@ import com.example.yummypizza.ui.adapters.OnMenuItemCLickListener
 import com.example.yummypizza.ui.screens.menu.item.MenuItemBottomSheet
 import com.example.yummypizza.ui.screens.preview.PreviewFragment
 import com.example.yummypizza.ui.adapters.LinearLayoutManagerWrapper
+import com.example.yummypizza.ui.screens.cart.CartFragment
 import com.example.yummypizza.utils.diffutils.MenuDiffUtil
 import com.example.yummypizza.utils.injections.viewmodels.ViewModelExtensions.injectViewModel
 import com.example.yummypizza.utils.navigation.FragmentNavigator
@@ -28,7 +30,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.lang.Exception
 import javax.inject.Inject
 
 class MenuFragment : Fragment(), OnMenuItemCLickListener,
@@ -69,12 +70,20 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener,
             viewModel.getMenu(viewLifecycleOwner)
         }
 
+        setOnClickListeners()
+        getCart()
         subscribeOnMenu()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
+    }
+
+    private fun setOnClickListeners(){
+        binding.confirmButton.setOnClickListener {
+            CartFragment.newInstance().show(parentFragmentManager, FragmentNavigator.root)
+        }
     }
 
     private fun prepareRecyclerView() {
@@ -89,6 +98,12 @@ class MenuFragment : Fragment(), OnMenuItemCLickListener,
         val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffUtil)
         adapter.size = list.size
         diffResult.dispatchUpdatesTo(adapter)
+    }
+
+    private fun getCart() {
+        PizzaDatabaseRepository.getCart().observe(viewLifecycleOwner, {
+            binding.cart.isVisible = it.isNotEmpty()
+        })
     }
 
     private fun subscribeOnMenu() {

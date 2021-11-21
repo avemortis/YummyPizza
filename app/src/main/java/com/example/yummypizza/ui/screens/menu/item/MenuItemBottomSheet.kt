@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.example.yummypizza.appComponent
+import com.example.yummypizza.data.database.PizzaDatabaseRepository
 import com.example.yummypizza.data.entities.PizzaEntity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.yummypizza.databinding.MenuItemBottomSheetBinding
@@ -62,11 +63,17 @@ class MenuItemBottomSheet : BottomSheetDialogFragment() {
 
     private fun setOnClickListeners() {
         binding.menuBottomSheetImage.setOnClickListener {
-            try {
-                onImageItemClickListener?.onImageClick(viewModel.index)
-                this.dismiss()
-            } catch (e: Exception) {
-            }
+            onImageItemClickListener?.onImageClick(viewModel.index)
+            this.dismiss()
+        }
+        binding.menuBottomSheetAddtocart.setOnClickListener {
+            this.dismiss()
+            val cartItem = requireActivity().appComponent.cartItem()
+            cartItem.id = viewModel.pizza.id
+            cartItem.name = viewModel.pizza.name
+            cartItem.picUrl = viewModel.pizza.firstImageUrl
+            cartItem.price = viewModel.pizza.price
+            PizzaDatabaseRepository.addToCart(cartItem)
         }
     }
 
@@ -89,6 +96,7 @@ class MenuItemBottomSheet : BottomSheetDialogFragment() {
                 }
 
                 override fun onSuccess(t: PizzaEntity) {
+                    viewModel.pizza = t
                     prepareViews(t)
                 }
 
